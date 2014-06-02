@@ -74,7 +74,7 @@ Thanks!
 | Windows       | all           | all       | Windows       | OK                      |
 | Mac OS        | all           | all       | Mac OS        | OK                      |
 | Mac OS        | all           | all       | Mac OS        | OK                      |
-| Linux         | all           | all       | RedHat        | IMPLEMENTED, NOT TESTED |
+| Linux         | all           | all       | RedHat        | OK                      |
 | Linux         | all           | all       | Linux Mint    | IMPLEMENTED, NOT TESTED |
 | Linux         | all           | all       | Ubuntu        | IMPLEMENTED, NOT TESTED |
 | Linux         | all           | all       | Debian        | IMPLEMENTED, NOT TESTED |
