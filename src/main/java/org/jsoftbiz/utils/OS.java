@@ -1,13 +1,11 @@
 package org.jsoftbiz.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -169,8 +167,14 @@ public class OS {
     File f = new File(filename);
     if (f.exists()) {
       try {
-        List<String> lines = Files.readAllLines(Paths.get(filename), Charset.defaultCharset());
-        return lines.get(0);
+        BufferedReader br = new BufferedReader(new FileReader(filename));
+        String line;
+        String lineToReturn = null;
+        while ((line = br.readLine()) != null) {
+          if (line.startsWith("PRETTY_NAME")) return line.substring(13, line.length() - 1);
+          lineToReturn = line;
+        }
+        return lineToReturn;
       } catch (IOException e) {
         return null;
       }

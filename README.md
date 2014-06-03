@@ -45,7 +45,7 @@ and you'll have access to the platform name, extra of the OS system properties:
 
 Wanna help?
 -----------
-I don't have access to all OS, so if you want to help, look at the table below of tested platforms.
+I don't have access to all OSes, so if you want to help, look at the table below of tested platforms.
 If you have access to one non-tested platform, just get this project, create a jar
 ```
    mvn clean package
