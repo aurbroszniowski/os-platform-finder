@@ -18,8 +18,9 @@ import java.util.Map;
  * - Linux
  * - Windows
  * - Mac OS
+ * - Solaris
  * <p/>
- * TODO : Sun OS, AIX
+ * TODO : AIX
  *
  * @author Aurelien Broszniowski
  *         http://www.jsoft.biz

@@ -84,7 +84,7 @@ Thanks!
 | Linux         | all           | all       | CentOS        | IMPLEMENTED, NOT TESTED |
 | Linux         | all           | all       | Slackware     | IMPLEMENTED, NOT TESTED |
 | Linux         | all           | all       | FreeBSD       | IMPLEMENTED, NOT TESTED |
-| SunOS         | all           | all       |               | NOT IMPLEMENTED         |
+| Solaris       | all           | all       |               | IMPLEMENTED, NOT TESTED |
 | AIX           | all           | all       |               | NOT IMPLEMENTED         |
 
 
