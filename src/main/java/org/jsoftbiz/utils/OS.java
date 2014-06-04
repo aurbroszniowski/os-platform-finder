@@ -58,7 +58,6 @@ public class OS {
 
   private static final Map<Double, String> macOs = new HashMap<Double, String>();
   private static final Map<Integer, String> darwin = new HashMap<Integer, String>();
-  private static final Map<String, String> linux = new HashMap<String, String>();
 
   static {
     macOs.put(10.0, "Puma");
@@ -83,8 +82,6 @@ public class OS {
     darwin.put(12, "Mountain Lion");
     darwin.put(13, "Mavericks");
     darwin.put(14, "Yosemite");
-
-    linux.put("Annvix", "/etc/annvix-release");
   }
 
   public static OS getOs() {
@@ -107,7 +104,7 @@ public class OS {
         return returnDarwinOsInfo(name, version, arch);
       }
 
-      // Try to detect a unix platform
+      // Try to detect a unix platform, now the fun begins
       if (name.startsWith("Linux")) {
         return returnLinuxOsInfo(name, version, arch);
       }
@@ -150,12 +147,14 @@ public class OS {
       if (platformName != null) return new OS(name, version, arch, platformName);
     }
 
-    // if nothing found yet, looks for the version file (not all linux distros)
+    // if nothing found yet, looks for the version info
     File fileVersion = new File("/proc/version");
     if (fileVersion.exists()) {
       platformName = readPlatformFromReleaseFile(fileVersion.getAbsolutePath());
       if (platformName != null) return new OS(name, version, arch, platformName);
     }
+
+    // if nothing found, well...
     return new OS(name, version, arch, name);
   }
 
