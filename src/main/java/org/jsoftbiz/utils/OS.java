@@ -104,8 +104,8 @@ public class OS {
         return returnDarwinOsInfo(name, version, arch);
       }
 
-      // Try to detect a unix platform, now the fun begins
-      if (name.startsWith("Linux")) {
+      // Try to detect other POSIX compliant platforms, now the fun begins
+      if (name.startsWith("Linux") || name.startsWith("SunOS")) {
         return returnLinuxOsInfo(name, version, arch);
       }
     }
