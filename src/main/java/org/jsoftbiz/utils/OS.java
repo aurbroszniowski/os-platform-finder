@@ -129,28 +129,28 @@ public class OS {
 
   private static OS returnLinuxOsInfo(final String name, final String version, final String arch) {
     // Generic Linux platform name
-    String platformName = readPlatformFromReleaseFile("/etc/system-release");
+    String platformName = getPlatformNameFromFile("/etc/system-release");
     if (platformName != null) return new OS(name, version, arch, platformName);
 
     File dir = new File("/etc/");
     if (dir.exists()) {
       // if generic 'system-release' file is not present, then try to find another one
-      platformName = readPlatformFromReleaseFile(getFileEndingWith(dir, "-release"));
+      platformName = getPlatformNameFromFile(getFileEndingWith(dir, "-release"));
       if (platformName != null) return new OS(name, version, arch, platformName);
 
       // if generic 'system-release' file is not present, then try to find '_version'
-      platformName = readPlatformFromReleaseFile(getFileEndingWith(dir, "_version"));
+      platformName = getPlatformNameFromFile(getFileEndingWith(dir, "_version"));
       if (platformName != null) return new OS(name, version, arch, platformName);
 
       // try with /etc/issue file
-      platformName = readPlatformFromReleaseFile("/etc/issue");
+      platformName = getPlatformNameFromFile("/etc/issue");
       if (platformName != null) return new OS(name, version, arch, platformName);
     }
 
     // if nothing found yet, looks for the version info
     File fileVersion = new File("/proc/version");
     if (fileVersion.exists()) {
-      platformName = readPlatformFromReleaseFile(fileVersion.getAbsolutePath());
+      platformName = getPlatformNameFromFile(fileVersion.getAbsolutePath());
       if (platformName != null) return new OS(name, version, arch, platformName);
     }
 
@@ -167,26 +167,30 @@ public class OS {
     return fileList[0].getAbsolutePath();
   }
 
-  private static String readPlatformFromReleaseFile(String filename) {
+  private static String getPlatformNameFromFile(String filename) {
     File f = new File(filename);
     if (f.exists()) {
       try {
         BufferedReader br = new BufferedReader(new FileReader(filename));
-        String line;
-        String lineToReturn = null;
-        int lineNb = 0;
-        while ((line = br.readLine()) != null) {
-          if (lineNb++ == 1) {
-            lineToReturn = line;
-          }
-          if (line.startsWith("PRETTY_NAME")) return line.substring(13, line.length() - 1);
-        }
-        return lineToReturn;
+        return readPlatformName(br);
       } catch (IOException e) {
         return null;
       }
     }
     return null;
+  }
+
+  private static String readPlatformName(final BufferedReader br) throws IOException {
+    String line;
+    String lineToReturn = null;
+    int lineNb = 0;
+    while ((line = br.readLine()) != null) {
+      if (lineNb++ == 0) {
+        lineToReturn = line;
+      }
+      if (line.startsWith("PRETTY_NAME")) return line.substring(13, line.length() - 1);
+    }
+    return lineToReturn;
   }
 
 }
