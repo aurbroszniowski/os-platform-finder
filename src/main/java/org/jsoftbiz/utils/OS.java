@@ -143,6 +143,10 @@ public class OS {
       // if generic 'system-release' file is not present, then try to find '_version'
       platformName = readPlatformFromReleaseFile(getFileEndingWith(dir, "_version"));
       if (platformName != null) return new OS(name, version, arch, platformName);
+
+      // try with /etc/issue file
+      platformName = readPlatformFromReleaseFile("/etc/issue");
+      if (platformName != null) return new OS(name, version, arch, platformName);
     }
 
     // if nothing found yet, looks for the version file (not all linux distros)
@@ -170,9 +174,12 @@ public class OS {
         BufferedReader br = new BufferedReader(new FileReader(filename));
         String line;
         String lineToReturn = null;
+        int lineNb = 0;
         while ((line = br.readLine()) != null) {
+          if (lineNb++ == 1) {
+            lineToReturn = line;
+          }
           if (line.startsWith("PRETTY_NAME")) return line.substring(13, line.length() - 1);
-          lineToReturn = line;
         }
         return lineToReturn;
       } catch (IOException e) {
