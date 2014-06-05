@@ -5,7 +5,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,6 +61,7 @@ public class OS {
 
   private static final Map<Double, String> macOs = new HashMap<Double, String>();
   private static final Map<Integer, String> darwin = new HashMap<Integer, String>();
+  private static final List<String> linux = new ArrayList<String>();
 
   static {
     macOs.put(10.0, "Puma");
@@ -82,6 +86,8 @@ public class OS {
     darwin.put(12, "Mountain Lion");
     darwin.put(13, "Mavericks");
     darwin.put(14, "Yosemite");
+
+    linux.addAll(Arrays.asList("Linux", "SunOS"));
   }
 
   public static OS getOs() {
@@ -105,8 +111,10 @@ public class OS {
       }
 
       // Try to detect other POSIX compliant platforms, now the fun begins
-      if (name.startsWith("Linux") || name.startsWith("SunOS")) {
-        return returnLinuxOsInfo(name, version, arch);
+      for (String linuxName : linux) {
+        if (name.startsWith(linuxName)) {
+          return returnLinuxOsInfo(name, version, arch);
+        }
       }
     }
     return new OS(name, version, arch, name);

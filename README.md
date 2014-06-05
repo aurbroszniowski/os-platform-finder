@@ -88,6 +88,13 @@ Thanks!
 | AIX           | all           | all       |               | NOT IMPLEMENTED         |
 
 
+Known issues with :
+
+| OS            | Version       | Arch.     | Platform      | Status                  |
+| ------------- |:-------------:|:---------:|:-------------:|:----------------------- |
+|               |               |           |               |                         |
+|               |               |           |               |                         |
+
 Author
 ------
 Aurélien Broszniowski  - [JSoft.biz](http://www.jsoft.biz)
