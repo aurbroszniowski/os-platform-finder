@@ -28,8 +28,8 @@ public class OSTest {
    * We'll see if this gets too complicated in the future
    */
   @Test
-  public void testFileWithLinuxPrettyName() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
-    Method method = getPrivateMethodToTest();
+  public void testReleaseFileWithLinuxPrettyName() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+    Method method = getPrivateMethodToTest("readPlatformName");
 
     BufferedReader mockFile = mock(BufferedReader.class);
     when(mockFile.readLine()).thenReturn("NAME=Fedora", "PRETTY_NAME=\"Fedora 17 (Beefy Miracle)\"", "VERSION_ID=17", null);
@@ -38,8 +38,8 @@ public class OSTest {
   }
 
   @Test
-  public void testFileWithOneLine() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
-    Method method = getPrivateMethodToTest();
+  public void testReleaseFileWithOneLine() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+    Method method = getPrivateMethodToTest("readPlatformName");
 
     BufferedReader mockFile = mock(BufferedReader.class);
     when(mockFile.readLine()).thenReturn("Fedora version 19", null);
@@ -48,8 +48,8 @@ public class OSTest {
   }
 
   @Test
-  public void testFileWithTwoLines() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
-    Method method = getPrivateMethodToTest();
+  public void testReleaseFileWithTwoLines() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+    Method method = getPrivateMethodToTest("readPlatformName");
 
     BufferedReader mockFile = mock(BufferedReader.class);
     when(mockFile.readLine()).thenReturn("Fedora version 19", "second line", null);
@@ -57,8 +57,18 @@ public class OSTest {
     Assert.assertThat(platformName, is(equalTo("Fedora version 19")));
   }
 
-  private Method getPrivateMethodToTest() throws NoSuchMethodException {
-    final String methodName = "readPlatformName";
+  @Test
+  public void testLsbRelease() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException {
+    Method method = getPrivateMethodToTest("readPlatformNameFromLsb");
+
+    BufferedReader mockFile = mock(BufferedReader.class);
+    when(mockFile.readLine()).thenReturn("DISTRIB_ID=Ubuntu", "DISTRIB_RELEASE=9.10", "DISTRIB_CODENAME=karmic",
+        "DISTRIB_DESCRIPTION=\"Ubuntu 9.10\"", null);
+    String platformName = (String)method.invoke(method, mockFile);
+    Assert.assertThat(platformName, is(equalTo("Ubuntu release 9.10 (karmic)")));
+  }
+
+  private Method getPrivateMethodToTest(String methodName) throws NoSuchMethodException {
     Class params[] = new Class[1];
     params[0] = BufferedReader.class;
     Method method = OS.class.getDeclaredMethod(methodName, params);
