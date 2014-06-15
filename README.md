@@ -81,7 +81,7 @@ Thanks!
 | Linux         | all           | all       | Fedora        | IMPLEMENTED, NOT TESTED |
 | Linux         | all           | all       | openSUS       | IMPLEMENTED, NOT TESTED |
 | Linux         | all           | all       | Arch Linux    | IMPLEMENTED, NOT TESTED |
-| Linux         | all           | all       | CentOS        | IMPLEMENTED, NOT TESTED |
+| Linux         | all           | all       | CentOS        | OK                      |
 | Linux         | all           | all       | Slackware     | IMPLEMENTED, NOT TESTED |
 | Linux         | all           | all       | FreeBSD       | IMPLEMENTED, NOT TESTED |
 | Solaris       | all           | all       |               | IMPLEMENTED, NOT TESTED |
