@@ -65,7 +65,7 @@ public class OSTest {
     when(mockFile.readLine()).thenReturn("DISTRIB_ID=Ubuntu", "DISTRIB_RELEASE=9.10", "DISTRIB_CODENAME=karmic",
         "DISTRIB_DESCRIPTION=\"Ubuntu 9.10\"", null);
     String platformName = (String)method.invoke(method, mockFile);
-    Assert.assertThat(platformName, is(equalTo("Ubuntu release 9.10 (karmic)")));
+    Assert.assertThat(platformName, is(equalTo("Ubuntu 9.10 (karmic)")));
   }
 
   private Method getPrivateMethodToTest(String methodName) throws NoSuchMethodException {

@@ -136,11 +136,13 @@ public class OS {
   }
 
   private static OS returnLinuxOsInfo(final String name, final String version, final String arch) {
+    String platformName;
     // The most likely is to have a LSB compliant distro
-    getPlatformNameFromLsbRelease();
+    platformName = getPlatformNameFromLsbRelease();
+    if (platformName != null) return new OS(name, version, arch, platformName);
 
     // Generic Linux platform name
-    String platformName = getPlatformNameFromFile("/etc/system-release");
+    platformName = getPlatformNameFromFile("/etc/system-release");
     if (platformName != null) return new OS(name, version, arch, platformName);
 
     File dir = new File("/etc/");
@@ -219,18 +221,16 @@ public class OS {
   }
 
   private static String readPlatformNameFromLsb(final BufferedReader br) throws IOException {
-    String distribId = null;
-    String distribRelease = null;
     String distribDescription = null;
+    String distribCodename = null;
 
     String line;
     while ((line = br.readLine()) != null) {
-      if (line.startsWith("DISTRIB_ID")) distribId = line.replace("DISTRIB_ID=", "");
-      if (line.startsWith("DISTRIB_RELEASE")) distribRelease = line.replace("DISTRIB_RELEASE=", "");
-      if (line.startsWith("DISTRIB_CODENAME")) distribDescription = line.replace("DISTRIB_CODENAME=", "");
+      if (line.startsWith("DISTRIB_DESCRIPTION")) distribDescription = line.replace("DISTRIB_DESCRIPTION=", "").replace("\"", "");
+      if (line.startsWith("DISTRIB_CODENAME")) distribCodename = line.replace("DISTRIB_CODENAME=", "");
     }
-    if (distribId != null && distribRelease != null && distribDescription != null) {
-      return distribId + " release " + distribRelease + " (" + distribDescription + ")";
+    if (distribDescription != null && distribCodename != null) {
+      return distribDescription + " (" + distribCodename + ")";
     }
     return null;
   }
