@@ -31,32 +31,57 @@ import java.util.Map;
 
 public class OS {
 
-  private String name;
-  private String arch;
-  private String version;
-  private String platformName;
+  private OsInfo osInfo;
 
-  public OS(final String name, final String version, final String arch, final String platformName) {
-    this.name = name;
-    this.arch = arch;
-    this.version = version;
-    this.platformName = platformName;
+  public OS() {}
+
+  private OS(final String name, final String version, final String arch) {
+    if (name != null) {
+      // Windows is quite easy to tackle with
+      if (name.startsWith("Windows")) {
+        this.osInfo = new OsInfo(name, version, arch, name);
+      }
+      // Mac requires a bit of work, but at least it's consistent
+      else if (name.startsWith("Mac")) {
+        initMacOsInfo(name, version, arch);
+      } else if (name.startsWith("Darwin")) {
+        initDarwinOsInfo(name, version, arch);
+      }
+      // Try to detect other POSIX compliant platforms, now the fun begins
+      else for (String linuxName : linux) {
+          if (name.startsWith(linuxName)) {
+            initLinuxOsInfo(name, version, arch);
+          }
+        }
+    } else this.osInfo = new OsInfo(name, version, arch, name);
+  }
+
+  private static class SingletonHolder {
+    static String name = System.getProperty("os.name");
+    static String version = System.getProperty("os.version");
+    static String arch = System.getProperty("os.arch");
+    private final static OS instance = new OS(name, version, arch);
+
+  }
+
+  public static OS getOs() {
+    return SingletonHolder.instance;
   }
 
   public String getName() {
-    return name;
+    return osInfo.getName();
   }
 
   public String getArch() {
-    return arch;
+    return osInfo.getArch();
   }
 
   public String getVersion() {
-    return version;
+    return osInfo.getVersion();
   }
 
   public String getPlatformName() {
-    return platformName;
+    return osInfo.getPlatformName();
   }
 
   private static final Map<Double, String> macOs = new HashMap<Double, String>();
@@ -90,88 +115,61 @@ public class OS {
     linux.addAll(Arrays.asList("Linux", "SunOS"));
   }
 
-  public static OS getOs() {
-    String name = System.getProperty("os.name");
-    String version = System.getProperty("os.version");
-    String arch = System.getProperty("os.arch");
-
-    if (name != null) {
-      // Windows is quite easy to tackle with
-      if (name.startsWith("Windows")) {
-        return new OS(name, version, arch, name);
-      }
-
-      // Mac requires a bit of work, but at least it's consistent
-      if (name.startsWith("Mac")) {
-        return returnMacOsInfo(name, version, arch);
-      }
-
-      if (name.startsWith("Darwin")) {
-        return returnDarwinOsInfo(name, version, arch);
-      }
-
-      // Try to detect other POSIX compliant platforms, now the fun begins
-      for (String linuxName : linux) {
-        if (name.startsWith(linuxName)) {
-          return returnLinuxOsInfo(name, version, arch);
-        }
-      }
-    }
-    return new OS(name, version, arch, name);
-  }
-
-  private static OS returnDarwinOsInfo(final String name, final String version, final String arch) {
-    String[] versions = version.split("\\.");
-    int numericVersion = Integer.parseInt(versions[0]);
-    return new OS(name, version, arch, "OS X " + darwin.get(numericVersion) + " (" + version + ")");
-  }
-
-  private static OS returnMacOsInfo(final String name, final String version, final String arch) {
+  private void initMacOsInfo(final String name, final String version, final String arch) {
     String[] versions = version.split("\\.");
     double numericVersion = Double.parseDouble(versions[0] + "." + versions[1]);
     if (numericVersion < 10)
-      return new OS(name, version, arch, "Mac OS " + version);
+      this.osInfo = new OsInfo(name, version, arch, "Mac OS " + version);
     else
-      return new OS(name, version, arch, "OS X " + macOs.get(numericVersion) + " (" + version + ")");
+      this.osInfo = new OsInfo(name, version, arch, "OS X " + macOs.get(numericVersion) + " (" + version + ")");
   }
 
-  private static OS returnLinuxOsInfo(final String name, final String version, final String arch) {
-    String platformName;
+  private void initDarwinOsInfo(final String name, final String version, final String arch) {
+    String[] versions = version.split("\\.");
+    int numericVersion = Integer.parseInt(versions[0]);
+    this.osInfo = new OsInfo(name, version, arch, "OS X " + darwin.get(numericVersion) + " (" + version + ")");
+  }
+
+  private void initLinuxOsInfo(final String name, final String version, final String arch) {
+    OsInfo osInfo;
     // The most likely is to have a LSB compliant distro
-    platformName = getPlatformNameFromLsbRelease();
-    if (platformName != null) return new OS(name, version, arch, platformName);
+    osInfo = getPlatformNameFromLsbRelease(name, version, arch);
 
     // Generic Linux platform name
-    platformName = getPlatformNameFromFile("/etc/system-release");
-    if (platformName != null) return new OS(name, version, arch, platformName);
+    if (osInfo == null)
+      osInfo = getPlatformNameFromFile(name, version, arch, "/etc/system-release");
 
     File dir = new File("/etc/");
     if (dir.exists()) {
       // if generic 'system-release' file is not present, then try to find another one
-      platformName = getPlatformNameFromFile(getFileEndingWith(dir, "-release"));
-      if (platformName != null) return new OS(name, version, arch, platformName);
+      if (osInfo == null)
+        osInfo = getPlatformNameFromFile(name, version, arch, getFileEndingWith(dir, "-release"));
 
       // if generic 'system-release' file is not present, then try to find '_version'
-      platformName = getPlatformNameFromFile(getFileEndingWith(dir, "_version"));
-      if (platformName != null) return new OS(name, version, arch, platformName);
+      if (osInfo == null)
+        osInfo = getPlatformNameFromFile(name, version, arch, getFileEndingWith(dir, "_version"));
 
       // try with /etc/issue file
-      platformName = getPlatformNameFromFile("/etc/issue");
-      if (platformName != null) return new OS(name, version, arch, platformName);
+      if (osInfo == null)
+        osInfo = getPlatformNameFromFile(name, version, arch, "/etc/issue");
+
     }
 
     // if nothing found yet, looks for the version info
     File fileVersion = new File("/proc/version");
     if (fileVersion.exists()) {
-      platformName = getPlatformNameFromFile(fileVersion.getAbsolutePath());
-      if (platformName != null) return new OS(name, version, arch, platformName);
+      if (osInfo == null)
+        osInfo = getPlatformNameFromFile(name, version, arch, fileVersion.getAbsolutePath());
     }
 
     // if nothing found, well...
-    return new OS(name, version, arch, name);
+    if (osInfo == null)
+      osInfo = new OsInfo(name, version, arch, name);
+
+    this.osInfo = osInfo;
   }
 
-  private static String getFileEndingWith(final File dir, final String fileEndingWith) {
+  private String getFileEndingWith(final File dir, final String fileEndingWith) {
     File[] fileList = dir.listFiles(new FilenameFilter() {
       public boolean accept(File dir, String filename) {
         return filename.endsWith(fileEndingWith);
@@ -180,12 +178,12 @@ public class OS {
     return fileList[0].getAbsolutePath();
   }
 
-  private static String getPlatformNameFromFile(String filename) {
+  private OsInfo getPlatformNameFromFile(final String name, final String version, final String arch, final String filename) {
     File f = new File(filename);
     if (f.exists()) {
       try {
         BufferedReader br = new BufferedReader(new FileReader(filename));
-        return readPlatformName(br);
+        return readPlatformName(name, version, arch, br);
       } catch (IOException e) {
         return null;
       }
@@ -193,7 +191,7 @@ public class OS {
     return null;
   }
 
-  private static String readPlatformName(final BufferedReader br) throws IOException {
+  OsInfo readPlatformName(final String name, final String version, final String arch, final BufferedReader br) throws IOException {
     String line;
     String lineToReturn = null;
     int lineNb = 0;
@@ -201,18 +199,18 @@ public class OS {
       if (lineNb++ == 0) {
         lineToReturn = line;
       }
-      if (line.startsWith("PRETTY_NAME")) return line.substring(13, line.length() - 1);
+      if (line.startsWith("PRETTY_NAME")) return new OsInfo(name, version, arch, line.substring(13, line.length() - 1));
     }
-    return lineToReturn;
+    return new OsInfo(name, version, arch, lineToReturn);
   }
 
-  private static String getPlatformNameFromLsbRelease() {
+   private OsInfo getPlatformNameFromLsbRelease(final String name, final String version, final String arch) {
     String fileName = "/etc/lsb-release";
     File f = new File(fileName);
     if (f.exists()) {
       try {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
-        return readPlatformNameFromLsb(br);
+        return readPlatformNameFromLsb(name, version, arch, br);
       } catch (IOException e) {
         return null;
       }
@@ -220,19 +218,50 @@ public class OS {
     return null;
   }
 
-  private static String readPlatformNameFromLsb(final BufferedReader br) throws IOException {
+  OsInfo readPlatformNameFromLsb(final String name, final String version, final String arch, final BufferedReader br) throws IOException {
     String distribDescription = null;
     String distribCodename = null;
 
     String line;
     while ((line = br.readLine()) != null) {
-      if (line.startsWith("DISTRIB_DESCRIPTION")) distribDescription = line.replace("DISTRIB_DESCRIPTION=", "").replace("\"", "");
+      if (line.startsWith("DISTRIB_DESCRIPTION"))
+        distribDescription = line.replace("DISTRIB_DESCRIPTION=", "").replace("\"", "");
       if (line.startsWith("DISTRIB_CODENAME")) distribCodename = line.replace("DISTRIB_CODENAME=", "");
     }
     if (distribDescription != null && distribCodename != null) {
-      return distribDescription + " (" + distribCodename + ")";
+      return new OsInfo(name, version, arch, distribDescription + " (" + distribCodename + ")");
     }
-    return null;
+    return new OsInfo(name, version, arch, name);
+  }
+
+  class OsInfo {
+    private String name;
+    private String arch;
+    private String version;
+    private String platformName;
+
+    private OsInfo(final String name, final String version, final String arch, final String platformName) {
+      this.name = name;
+      this.arch = arch;
+      this.version = version;
+      this.platformName = platformName;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getArch() {
+      return arch;
+    }
+
+    public String getVersion() {
+      return version;
+    }
+
+    public String getPlatformName() {
+      return platformName;
+    }
   }
 
 }

@@ -76,7 +76,7 @@ Thanks!
 | OS X          | all           | all       | OS X          | OK                      |
 | Linux         | all           | all       | RedHat        | OK                      |
 | Linux         | all           | all       | Linux Mint    | IMPLEMENTED, NOT TESTED |
-| Linux         | all           | all       | Ubuntu        | IMPLEMENTED, NOT TESTED |
+| Linux         | all           | all       | Ubuntu        | OK                      |
 | Linux         | all           | all       | Debian        | IMPLEMENTED, NOT TESTED |
 | Linux         | all           | all       | Fedora        | IMPLEMENTED, NOT TESTED |
 | Linux         | all           | all       | openSUS       | IMPLEMENTED, NOT TESTED |
