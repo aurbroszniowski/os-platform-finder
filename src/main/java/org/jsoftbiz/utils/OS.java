@@ -53,7 +53,9 @@ public class OS {
             initLinuxOsInfo(name, version, arch);
           }
         }
-    } else this.osInfo = new OsInfo(name, version, arch, name);
+    }
+    if (this.osInfo == null)
+      this.osInfo = new OsInfo(name, version, arch, name);
   }
 
   private static class SingletonHolder {
@@ -231,7 +233,7 @@ public class OS {
     if (distribDescription != null && distribCodename != null) {
       return new OsInfo(name, version, arch, distribDescription + " (" + distribCodename + ")");
     }
-    return new OsInfo(name, version, arch, name);
+    return null;
   }
 
   class OsInfo {
