@@ -177,10 +177,15 @@ public class OS {
         return filename.endsWith(fileEndingWith);
       }
     });
-    return fileList[0].getAbsolutePath();
+    if (fileList.length > 0)
+      return fileList[0].getAbsolutePath();
+    else
+      return null;
   }
 
   private OsInfo getPlatformNameFromFile(final String name, final String version, final String arch, final String filename) {
+    if (filename == null)
+      return null;
     File f = new File(filename);
     if (f.exists()) {
       try {
