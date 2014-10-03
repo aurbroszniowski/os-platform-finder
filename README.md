@@ -78,7 +78,7 @@ Thanks!
 | Linux         | all           | all       | Linux Mint    | IMPLEMENTED, NOT TESTED |
 | Linux         | all           | all       | Ubuntu        | OK                      |
 | Linux         | all           | all       | Debian        | IMPLEMENTED, NOT TESTED |
-| Linux         | all           | all       | Fedora        | OK |
+| Linux         | all           | all       | Fedora        | OK                      |
 | Linux         | all           | all       | openSUS       | IMPLEMENTED, NOT TESTED |
 | Linux         | all           | all       | Arch Linux    | IMPLEMENTED, NOT TESTED |
 | Linux         | all           | all       | CentOS        | OK                      |
