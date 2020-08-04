@@ -25,6 +25,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
+import static org.jsoftbiz.utils.OS.OS;
+import static org.jsoftbiz.utils.OS.OsInfo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +44,7 @@ public class OSTest {
     String name = "some name";
     String version = "4.1.4";
     String arch = "68000";
-    OS.OsInfo osInfo = new OS().readPlatformName(name, version, arch, mockFile);
+    OsInfo osInfo = OS.OS.readPlatformName(name, version, arch, mockFile);
     Assert.assertThat(osInfo.getName(), is(equalTo(name)));
     Assert.assertThat(osInfo.getVersion(), is(equalTo(version)));
     Assert.assertThat(osInfo.getArch(), is(equalTo(arch)));
@@ -58,7 +60,7 @@ public class OSTest {
     String name = "some name";
     String version = "4.1.4";
     String arch = "68000";
-    OS.OsInfo osInfo = new OS().readPlatformName(name, version, arch, mockFile);
+    OsInfo osInfo = OS.readPlatformName(name, version, arch, mockFile);
     Assert.assertThat(osInfo.getName(), is(equalTo(name)));
     Assert.assertThat(osInfo.getVersion(), is(equalTo(version)));
     Assert.assertThat(osInfo.getArch(), is(equalTo(arch)));
@@ -73,7 +75,7 @@ public class OSTest {
     String name = "some name";
     String version = "4.1.4";
     String arch = "68000";
-    OS.OsInfo osInfo = new OS().readPlatformName(name, version, arch, mockFile);
+    OsInfo osInfo = OS.readPlatformName(name, version, arch, mockFile);
     Assert.assertThat(osInfo.getName(), is(equalTo(name)));
     Assert.assertThat(osInfo.getVersion(), is(equalTo(version)));
     Assert.assertThat(osInfo.getArch(), is(equalTo(arch)));
@@ -89,7 +91,7 @@ public class OSTest {
     String name = "some name";
     String version = "4.1.4";
     String arch = "68000";
-    OS.OsInfo osInfo = new OS().readPlatformNameFromLsb(name, version, arch, mockFile);
+    OsInfo osInfo = OS.OS.readPlatformNameFromLsb(name, version, arch, mockFile);
     Assert.assertThat(osInfo.getName(), is(equalTo(name)));
     Assert.assertThat(osInfo.getVersion(), is(equalTo(version)));
     Assert.assertThat(osInfo.getArch(), is(equalTo(arch)));
