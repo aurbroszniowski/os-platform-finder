@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Aurélien Broszniowski
+ * Copyright 2014-2020 Aurélien Broszniowski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,13 @@ import org.jsoftbiz.utils.OS;
 public class App {
 
   public static void main(String[] args) {
-    OS myOS = OS.getOs();
+
+    System.out.println("name " + System.getProperty("os.name"));
+    System.out.println("version " + System.getProperty("os.version"));
+    System.out.println("arch " + System.getProperty("os.arch"));
+
+
+    OS myOS = OS.OS;
     System.out.println("Your OS is :");
     System.out.println(" - Platform name = " + myOS.getPlatformName());
     System.out.println(" - OS name = " + myOS.getName());

@@ -27,20 +27,18 @@ The Solution?
 -------------
 The class **org.jsoftbiz.utils.OS** included in this project gives you the information of your OS platform
 
-Just do
+Just add this import:
 ```
-    import org.jsoftbiz.utils.OS;
-    
-    OS myOS = OS.getOs();
+    import static org.jsoftbiz.utils.OS.OS;
 ```
 
 and you'll have access to the platform name, extra of the OS system properties:
 ```
-    myOS.getPlatformName()
+    OS.getPlatformName()
 
-    myOS.getName()
-    myOS.getVersion()
-    myOS.getArch()
+    OS.getName()
+    OS.getVersion()
+    OS.getArch()
 ```
 
 Wanna help?
@@ -84,8 +82,10 @@ Thanks!
 | Linux         | all           | all       | CentOS        | OK                      |
 | Linux         | all           | all       | Slackware     | IMPLEMENTED, NOT TESTED |
 | Linux         | all           | all       | FreeBSD       | IMPLEMENTED, NOT TESTED |
-| Solaris       | all           | all       |               | IMPLEMENTED, NOT TESTED |
-| AIX           | all           | all       |               | NOT IMPLEMENTED         |
+| Solaris       | all           | all       |               | OK                      |
+| AIX           | all           | all       |               | OK                      |
+| HP-UX         | all           | all       |               | NOT IMPLEMENTED         |
+| z/OS          | all           | all       |               | NOT IMPLEMENTED         |
 
 
 Known issues with :
