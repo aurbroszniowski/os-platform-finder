@@ -70,6 +70,7 @@ public class OS {
     MAC_OS.put("10.13", "High Sierra");
     MAC_OS.put("10.14", "Mojave");
     MAC_OS.put("10.15", "Catalina");
+    MAC_OS.put("10.16", "Big Sur");
 
     DARWIN.put(5, "Puma");
     DARWIN.put(6, "Jaguar");
