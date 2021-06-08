@@ -75,6 +75,7 @@ public class OS {
     MAC_OS.put("11.1", "Big Sur");
     MAC_OS.put("11.2", "Big Sur");
     MAC_OS.put("11.3", "Big Sur");
+    MAC_OS.put("11.4", "Big Sur");
 
     DARWIN.put(5, "Puma");
     DARWIN.put(6, "Jaguar");
