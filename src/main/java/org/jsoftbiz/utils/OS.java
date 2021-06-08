@@ -70,7 +70,12 @@ public class OS {
     MAC_OS.put("10.13", "High Sierra");
     MAC_OS.put("10.14", "Mojave");
     MAC_OS.put("10.15", "Catalina");
-    MAC_OS.put("10.16", "Big Sur");
+    MAC_OS.put("10.16", "Big Sur"); // MacOS Big Sur referred to its version as "10.16" when upgrading from prior versions of macOS
+    MAC_OS.put("11.0", "Big Sur");
+    MAC_OS.put("11.1", "Big Sur");
+    MAC_OS.put("11.2", "Big Sur");
+    MAC_OS.put("11.3", "Big Sur");
+    MAC_OS.put("11.4", "Big Sur");
 
     DARWIN.put(5, "Puma");
     DARWIN.put(6, "Jaguar");
