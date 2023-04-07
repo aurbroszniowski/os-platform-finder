@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Aurélien Broszniowski
+ * Copyright 2014-2023 Aurélien Broszniowski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.jsoftbiz;
+package com.jsoftbiz;
 
-import org.jsoftbiz.utils.OS;
+import com.jsoftbiz.utils.OS;
 
 public class App {
 

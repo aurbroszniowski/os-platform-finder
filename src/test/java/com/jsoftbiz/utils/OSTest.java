@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.jsoftbiz.utils;
+package com.jsoftbiz.utils;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,8 +25,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
-import static org.jsoftbiz.utils.OS.OS;
-import static org.jsoftbiz.utils.OS.OsInfo;
+import static com.jsoftbiz.utils.OS.OS;
+import static com.jsoftbiz.utils.OS.OsInfo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
