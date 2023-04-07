@@ -25,11 +25,11 @@ OS X Mavericks (10.9.3)
 
 The Solution?
 -------------
-The class **org.jsoftbiz.utils.OS** included in this project gives you the information of your OS platform
+The class **com.jsoftbiz.utils.OS** included in this project gives you the information of your OS platform
 
 Just add this import:
 ```
-    import static org.jsoftbiz.utils.OS.OS;
+    import static com.jsoftbiz.utils.OS.OS;
 ```
 
 and you'll have access to the platform name, extra of the OS system properties:
@@ -98,4 +98,4 @@ Known issues with :
 
 Author
 ------
-Aurélien Broszniowski  - [JSoft.biz](http://www.jsoft.biz)
+Aurélien Broszniowski  - [JSoftBiz.com](http://www.jsoftbiz.com)

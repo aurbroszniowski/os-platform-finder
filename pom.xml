@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.jsoftbiz</groupId>
+  <groupId>com.jsoftbiz</groupId>
   <artifactId>os-platform-finder</artifactId>
   <packaging>jar</packaging>
   <version>1.1</version>
@@ -45,7 +45,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>org.jsoftbiz.App</mainClass>
+              <mainClass>com.jsoftbiz.App</mainClass>
             </manifest>
           </archive>
         </configuration>

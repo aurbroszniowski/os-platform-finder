@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Aurélien Broszniowski
+ * Copyright 2014-2023 Aurélien Broszniowski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.jsoftbiz.utils;
+package com.jsoftbiz.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -42,7 +42,7 @@ import java.util.Map;
  * TODO :  P-UX / ZOS
  *
  * @author Aurelien Broszniowski
- * http://www.jsoft.biz
+ * http://www.jsoftbiz.com
  */
 
 public class OS {
