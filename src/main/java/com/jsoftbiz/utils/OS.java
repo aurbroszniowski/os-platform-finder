@@ -71,12 +71,9 @@ public class OS {
     MAC_OS.put("10.14", "Mojave");
     MAC_OS.put("10.15", "Catalina");
     MAC_OS.put("10.16", "Big Sur"); // MacOS Big Sur referred to its version as "10.16" when upgrading from prior versions of macOS
-    MAC_OS.put("11.0", "Big Sur");
-    MAC_OS.put("11.1", "Big Sur");
-    MAC_OS.put("11.2", "Big Sur");
-    MAC_OS.put("11.3", "Big Sur");
-    MAC_OS.put("11.4", "Big Sur");
-    MAC_OS.put("11.5", "Big Sur");
+    MAC_OS.put("11", "Big Sur");
+    MAC_OS.put("12", "Monterey");
+    MAC_OS.put("13", "Ventura");
 
     DARWIN.put(5, "Puma");
     DARWIN.put(6, "Jaguar");
@@ -172,13 +169,16 @@ public class OS {
     int dotIndex = version.indexOf('.');
     int numericVersion = Integer.parseInt(dotIndex < 0 ? version : version.substring(0, dotIndex));
 
-    dotIndex = dotIndex >= version.length() ? -1 : version.indexOf('.', dotIndex + 1);
+    dotIndex = version.indexOf('.', dotIndex + 1);
     String versionKey = dotIndex < 3 ? version : version.substring(0, dotIndex);
 
     if (numericVersion < 10) {
       return new OsInfo(name, version, arch, "Mac OS " + version);
-    } else {
+    } else if (numericVersion == 10) {
       String versionName = MAC_OS.containsKey(versionKey) ? MAC_OS.get(versionKey) : "unknown";
+      return new OsInfo(name, version, arch, "OS X " + versionName + " (" + version + ")");
+    } else {
+      String versionName = MAC_OS.containsKey(String.valueOf(numericVersion)) ? MAC_OS.get(String.valueOf(numericVersion)) : "unknown";
       return new OsInfo(name, version, arch, "OS X " + versionName + " (" + version + ")");
     }
   }
@@ -309,7 +309,7 @@ public class OS {
       if (line.startsWith("ID="))
         distribId = line.replace("ID=", "").replace("\"", "");
     }
-    if (distribName != null && distribId != null) {
+    if (distribId != null) {
       return new OsInfo(name, version, arch, distribName + " " + distribVersion + "(" + distribId + ")");
     }
     return null;
