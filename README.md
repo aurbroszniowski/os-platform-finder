@@ -67,25 +67,26 @@ If it is not ok, then please open an issue, including the details of your OS and
 Thanks!
 
 
-| OS            | Version       | Arch.     | Platform      | Status                  |
-| ------------- |:-------------:|:---------:|:-------------:|:----------------------- |
-| Windows       | all           | all       | Windows       | OK                      |
-| Mac OS        | all           | all       | Mac OS        | OK                      |
-| OS X          | all           | all       | OS X          | OK                      |
-| Linux         | all           | all       | RedHat        | OK                      |
-| Linux         | all           | all       | Linux Mint    | IMPLEMENTED, NOT TESTED |
-| Linux         | all           | all       | Ubuntu        | OK                      |
-| Linux         | all           | all       | Debian        | IMPLEMENTED, NOT TESTED |
-| Linux         | all           | all       | Fedora        | OK                      |
-| Linux         | all           | all       | openSUS       | IMPLEMENTED, NOT TESTED |
-| Linux         | all           | all       | Arch Linux    | IMPLEMENTED, NOT TESTED |
-| Linux         | all           | all       | CentOS        | OK                      |
-| Linux         | all           | all       | Slackware     | IMPLEMENTED, NOT TESTED |
-| Linux         | all           | all       | FreeBSD       | IMPLEMENTED, NOT TESTED |
-| Solaris       | all           | all       |               | OK                      |
-| AIX           | all           | all       |               | OK                      |
-| HP-UX         | all           | all       |               | NOT IMPLEMENTED         |
-| z/OS          | all           | all       |               | NOT IMPLEMENTED         |
+| OS            | Version       | Arch.     |  Platform  | Status                  |
+| ------------- |:-------------:|:---------:|:----------:|:----------------------- |
+| Windows       | all           | all       |  Windows   | OK                      |
+| Mac OS        | all           | all       |   Mac OS   | OK                      |
+| OS X          | all           | all       |    OS X    | OK                      |
+| Linux         | all           | all       |   Alpine   | OK                      |
+| Linux         | all           | all       | Arch Linux | OK |
+| Linux         | all           | all       |   Debian   | IMPLEMENTED, NOT TESTED |
+| Linux         | all           | all       |  FreeBSD   | IMPLEMENTED, NOT TESTED |
+| Linux         | all           | all       |   RedHat   | OK                      |
+| Linux         | all           | all       | Linux Mint | IMPLEMENTED, NOT TESTED |
+| Linux         | all           | all       |   Ubuntu   | OK                      |
+| Linux         | all           | all       |   Fedora   | OK                      |
+| Linux         | all           | all       |  openSUS   | IMPLEMENTED, NOT TESTED |
+| Linux         | all           | all       |   CentOS   | OK                      |
+| Linux         | all           | all       | Slackware  | IMPLEMENTED, NOT TESTED |
+| Solaris       | all           | all       |            | OK                      |
+| AIX           | all           | all       |            | OK                      |
+| HP-UX         | all           | all       |            | NOT IMPLEMENTED         |
+| z/OS          | all           | all       |            | NOT IMPLEMENTED         |
 
 
 Known issues with :
