@@ -9,6 +9,35 @@
   <packaging>jar</packaging>
   <version>1.1</version>
 
+  <description>OS Platform Finder is a utility framework to find OS information in Java</description>
+  <url>https://github.com/aurbroszniowski/os-platform-finder</url>
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:https://github.com/aurbroszniowski/os-platform-finder.git</connection>
+    <developerConnection>scm:git:https://github.com/aurbroszniowski/os-platform-finder.git</developerConnection>
+    <url>https://github.com/aurbroszniowski/os-platform-finder</url>
+  </scm>
+  <developers>
+    <developer>
+      <id>aurelien</id>
+      <name>Aurelien Broszniowski</name>
+      <organization>JSoft</organization>
+      <organizationUrl>http://www.jsoftbiz.com</organizationUrl>
+      <roles>
+        <role>lead</role>
+        <role>developer</role>
+      </roles>
+      <timezone>1</timezone>
+    </developer>
+  </developers>
+
   <distributionManagement>
     <snapshotRepository>
       <id>ossrh-snapshot</id>
@@ -42,6 +71,7 @@
             </plugin>
 
             <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-gpg-plugin</artifactId>
               <version>${version.maven-gpg-plugin}</version>
               <executions>
@@ -75,8 +105,38 @@
         </pluginManagement>
         <plugins>
           <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.2.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.5.0</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
           </plugin>
+
           <plugin>
             <groupId>org.sonatype.plugins</groupId>
             <artifactId>nexus-staging-maven-plugin</artifactId>
