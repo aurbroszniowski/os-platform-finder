@@ -12,17 +12,23 @@ jobs:
       packages: write
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 11
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set up JDK
       uses: actions/setup-java@v3
       with:
+        java-package: 'jdk'
         java-version: '11'
         distribution: 'temurin'
-        server-id: ossrh
-        server-username: MAVEN_USERNAME
-        server-password: MAVEN_PASSWORD
-    - id: install-secret-key
-      name: Install gpg secret key
-      run: |
-        cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
-        gpg --list-secret-keys --keyid-format LONG
+        server-id: 'ossrh'
+        server-username: OSSRH_USERNAME
+        server-password: OSSRH_PASSWORD
+        gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY}}
+        gpg-passphrase: OSSRH_GPG_SECRET_KEY_PASSWORD
+        cache: 'maven'
+    - name: Publish package
+      run: mvn -U -B clean deploy -Prelease
+      env:
+        OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+        OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+        OSSRH_GPG_SECRET_KEY_PASSWORD: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
