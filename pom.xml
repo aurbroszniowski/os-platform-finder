@@ -6,6 +6,7 @@
 
   <groupId>com.jsoftbiz</groupId>
   <artifactId>os-platform-finder</artifactId>
+  <name>os-platform-finder</name>
   <packaging>jar</packaging>
   <version>1.1</version>
 
