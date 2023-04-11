@@ -9,6 +9,19 @@
   <packaging>jar</packaging>
   <version>1.1</version>
 
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh-snapshot</id>
+      <name>Sonatype Nexus Snapshots Repository</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh-staging</id>
+      <name>Sonatype Nexus Release Repository</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
