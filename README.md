@@ -27,6 +27,24 @@ The Solution?
 -------------
 The class **com.jsoftbiz.utils.OS** included in this project gives you the information of your OS platform
 
+**Maven coordinates**
+
+```
+<dependency>
+  <groupId>com.jsoftbiz</groupId>
+  <artifactId>os-platform-finder</artifactId>
+  <version>1.1</version>
+</dependency>
+```
+
+**Gradle coordinates**
+
+```
+implementation 'com.jsoftbiz:os-platform-finder:1.1'
+```
+
+**Java example**
+
 Just add this import:
 ```
     import static com.jsoftbiz.utils.OS.OS;
