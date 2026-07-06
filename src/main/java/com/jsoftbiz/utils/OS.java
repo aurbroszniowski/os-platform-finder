@@ -39,8 +39,9 @@ import java.util.Map;
  * - Windows
  * - macOS
  * - Solaris
+ * - HP-UX
+ * - z/OS
  * <br>
- * TODO : HP-UX / z/OS
  *
  * @author Aurelien Broszniowski
  * @see <a href="https://www.jsoft.biz">https://www.jsoft.biz</a>
@@ -101,7 +102,7 @@ public class OS {
     DARWIN.put(24, "Sequoia");
     DARWIN.put(25, "Tahoe");
 
-    UNIX.addAll(Arrays.asList("Linux", "SunOS", "FreeBSD", "AIX"));
+    UNIX.addAll(Arrays.asList("Linux", "SunOS", "FreeBSD", "AIX", "HP-UX", "z/OS", "OS/390"));
 
     OS = new OS();
   }
@@ -514,8 +515,23 @@ public class OS {
     }
 
     public boolean isUnix() {
-      return (name != null) && (name.contains("nix") || name.contains("nux") || name.startsWith("AIX") || name.startsWith("FreeBSD") || name.startsWith("SunOS"));
+      return isUnixName(name);
     }
+  }
+
+  private static boolean isUnixName(final String name) {
+    if (name == null) {
+      return false;
+    }
+    if (name.contains("nix") || name.contains("nux")) {
+      return true;
+    }
+    for (String unixName : UNIX) {
+      if (name.startsWith(unixName)) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }

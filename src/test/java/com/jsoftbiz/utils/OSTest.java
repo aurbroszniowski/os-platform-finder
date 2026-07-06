@@ -180,6 +180,13 @@ public class OSTest {
     Assert.assertThat(OS.isPosix(), is(equalTo(true)));
   }
 
+  @Test
+  public void testHpUxAndZosAreUnix() {
+    assertUnixOsName("HP-UX");
+    assertUnixOsName("z/OS");
+    assertUnixOsName("OS/390");
+  }
+
   private void assertMacOsPlatformName(String version, String expectedPlatformName) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     OsInfo osInfo = invokeOsInfoInitializer("initMacOsInfo", "Mac OS X", version, "x86_64");
     Assert.assertThat(osInfo.getPlatformName(), is(equalTo(expectedPlatformName)));
@@ -200,6 +207,13 @@ public class OSTest {
     Method method = com.jsoftbiz.utils.OS.class.getDeclaredMethod("readPlatformNameFromOsRelease", String.class, String.class, String.class, BufferedReader.class);
     method.setAccessible(true);
     return (OsInfo)method.invoke(OS, name, version, arch, br);
+  }
+
+  private void assertUnixOsName(String osName) {
+    OsInfo osInfo = new OsInfo(osName, "1.0", "s390x", osName);
+    Assert.assertThat(osInfo.isUnix(), is(equalTo(true)));
+    Assert.assertThat(osInfo.isMac(), is(equalTo(false)));
+    Assert.assertThat(osInfo.isWindows(), is(equalTo(false)));
   }
 
   private BufferedReader reader(String... lines) {

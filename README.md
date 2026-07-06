@@ -33,14 +33,14 @@ The class **com.jsoftbiz.utils.OS** included in this project gives you the infor
 <dependency>
   <groupId>com.jsoftbiz</groupId>
   <artifactId>os-platform-finder</artifactId>
-  <version>1.1</version>
+  <version>1.2</version>
 </dependency>
 ```
 
 **Gradle coordinates**
 
 ```
-implementation 'com.jsoftbiz:os-platform-finder:1.1'
+implementation 'com.jsoftbiz:os-platform-finder:1.2'
 ```
 
 **Java example**
@@ -103,8 +103,8 @@ Thanks!
 | Linux         | all           | all       | Slackware  | IMPLEMENTED, NOT TESTED |
 | Solaris       | all           | all       |            | OK                      |
 | AIX           | all           | all       |            | OK                      |
-| HP-UX         | all           | all       |            | NOT IMPLEMENTED         |
-| z/OS          | all           | all       |            | NOT IMPLEMENTED         |
+| HP-UX         | all           | all       |            | IMPLEMENTED, NOT TESTED |
+| z/OS          | all           | all       |            | IMPLEMENTED, NOT TESTED |
 
 
 Known issues with :
@@ -116,4 +116,4 @@ Known issues with :
 
 Author
 ------
-Aurélien Broszniowski  - [JSoftBiz.com](http://www.jsoftbiz.com)
+Aurélien Broszniowski  - [JSoft.Biz](http://www.jsoft.biz)
