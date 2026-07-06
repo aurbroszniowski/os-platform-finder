@@ -23,6 +23,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,13 +37,13 @@ import java.util.Map;
  * It currently supports :
  * - Linux
  * - Windows
- * - Mac OS
+ * - macOS
  * - Solaris
  * <br>
- * TODO :  P-UX / ZOS
+ * TODO : HP-UX / z/OS
  *
  * @author Aurelien Broszniowski
- * http://www.jsoftbiz.com
+ * @see <a href="https://www.jsoft.biz">https://www.jsoft.biz</a>
  */
 
 public class OS {
@@ -74,6 +75,9 @@ public class OS {
     MAC_OS.put("11", "Big Sur");
     MAC_OS.put("12", "Monterey");
     MAC_OS.put("13", "Ventura");
+    MAC_OS.put("14", "Sonoma");
+    MAC_OS.put("15", "Sequoia");
+    MAC_OS.put("26", "Tahoe");
 
     DARWIN.put(5, "Puma");
     DARWIN.put(6, "Jaguar");
@@ -90,19 +94,21 @@ public class OS {
     DARWIN.put(17, "High Sierra");
     DARWIN.put(18, "Mojave");
     DARWIN.put(19, "Catalina");
+    DARWIN.put(20, "Big Sur");
+    DARWIN.put(21, "Monterey");
+    DARWIN.put(22, "Ventura");
+    DARWIN.put(23, "Sonoma");
+    DARWIN.put(24, "Sequoia");
+    DARWIN.put(25, "Tahoe");
 
     UNIX.addAll(Arrays.asList("Linux", "SunOS", "FreeBSD", "AIX"));
 
     OS = new OS();
   }
 
-  private static class SingletonHolder {
-    private final static OS instance = new OS();
-  }
-
   @Deprecated
   public static OS getOs() {
-    return SingletonHolder.instance;
+    return OS;
   }
 
   private final OsInfo osInfo;
@@ -166,11 +172,12 @@ public class OS {
   }
 
   private OsInfo initMacOsInfo(final String name, final String version, final String arch) {
-    int dotIndex = version.indexOf('.');
-    int numericVersion = Integer.parseInt(dotIndex < 0 ? version : version.substring(0, dotIndex));
+    int numericVersion = parseMajorVersion(version);
+    if (numericVersion < 0) {
+      return new OsInfo(name, version, arch, "OS X unknown (" + version + ")");
+    }
 
-    dotIndex = version.indexOf('.', dotIndex + 1);
-    String versionKey = dotIndex < 3 ? version : version.substring(0, dotIndex);
+    String versionKey = getMajorMinorVersion(version);
 
     if (numericVersion < 10) {
       return new OsInfo(name, version, arch, "Mac OS " + version);
@@ -184,10 +191,34 @@ public class OS {
   }
 
   private OsInfo initDarwinOsInfo(final String name, final String version, final String arch) {
-    String[] versions = version.split("\\.");
-    int numericVersion = Integer.parseInt(versions[0]);
+    int numericVersion = parseMajorVersion(version);
     String versionName = DARWIN.containsKey(numericVersion) ? DARWIN.get(numericVersion) : "unknown";
     return new OsInfo(name, version, arch, "OS X " + versionName + " (" + version + ")");
+  }
+
+  private int parseMajorVersion(final String version) {
+    if (version == null || version.length() == 0) {
+      return -1;
+    }
+    int dotIndex = version.indexOf('.');
+    String majorVersion = dotIndex < 0 ? version : version.substring(0, dotIndex);
+    try {
+      return Integer.parseInt(majorVersion);
+    } catch (NumberFormatException e) {
+      return -1;
+    }
+  }
+
+  private String getMajorMinorVersion(final String version) {
+    if (version == null) {
+      return null;
+    }
+    int firstDotIndex = version.indexOf('.');
+    if (firstDotIndex < 0) {
+      return version;
+    }
+    int secondDotIndex = version.indexOf('.', firstDotIndex + 1);
+    return secondDotIndex < 0 ? version : version.substring(0, secondDotIndex);
   }
 
   private OsInfo initUnixOsInfo(final String name, final String version, final String arch) {
@@ -245,6 +276,14 @@ public class OS {
         return filename.endsWith(fileEndingWith);
       }
     });
+    if (fileList == null) {
+      return null;
+    }
+    Arrays.sort(fileList, new Comparator<File>() {
+      public int compare(File first, File second) {
+        return first.getName().compareTo(second.getName());
+      }
+    });
     if (fileList.length > 0) {
       return fileList[0].getAbsolutePath();
     } else {
@@ -258,8 +297,7 @@ public class OS {
     }
     File f = new File(filename);
     if (f.exists()) {
-      try {
-        BufferedReader br = new BufferedReader(new FileReader(filename));
+      try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
         return readPlatformName(name, version, arch, br);
       } catch (IOException e) {
         return null;
@@ -276,7 +314,13 @@ public class OS {
       if (lineNb++ == 0) {
         lineToReturn = line;
       }
-      if (line.startsWith("PRETTY_NAME")) return new OsInfo(name, version, arch, line.substring(13, line.length() - 1));
+      String prettyName = parseKeyValue(line, "PRETTY_NAME");
+      if (prettyName != null) {
+        return new OsInfo(name, version, arch, prettyName);
+      }
+    }
+    if (lineToReturn == null) {
+      return null;
     }
     return new OsInfo(name, version, arch, lineToReturn);
   }
@@ -285,8 +329,7 @@ public class OS {
     String fileName = "/etc/os-release";
     File f = new File(fileName);
     if (f.exists()) {
-      try {
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
+      try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
         return readPlatformNameFromOsRelease(name, version, arch, br);
       } catch (IOException e) {
         return null;
@@ -299,18 +342,30 @@ public class OS {
     String distribName = "Linux";
     String distribVersion = "";
     String distribId = null;
+    boolean hasPlatformData = false;
 
     String line;
     while ((line = br.readLine()) != null) {
-      if (line.startsWith("NAME="))
-        distribName = line.replace("NAME=", "").replace("\"", "");
-      if (line.startsWith("VERSION="))
-        distribVersion = line.replace("VERSION=", "").replace("\"", "") + " ";
-      if (line.startsWith("ID="))
-        distribId = line.replace("ID=", "").replace("\"", "");
+      String parsedName = parseKeyValue(line, "NAME");
+      if (parsedName != null) {
+        distribName = parsedName;
+        hasPlatformData = true;
+      }
+      String parsedVersion = parseKeyValue(line, "VERSION");
+      if (parsedVersion != null) {
+        distribVersion = parsedVersion + " ";
+        hasPlatformData = true;
+      }
+      String parsedId = parseKeyValue(line, "ID");
+      if (parsedId != null) {
+        distribId = parsedId;
+      }
     }
     if (distribId != null) {
       return new OsInfo(name, version, arch, distribName + " " + distribVersion + "(" + distribId + ")");
+    }
+    if (hasPlatformData) {
+      return new OsInfo(name, version, arch, (distribName + " " + distribVersion).trim());
     }
     return null;
   }
@@ -319,8 +374,7 @@ public class OS {
     String fileName = "/etc/lsb-release";
     File f = new File(fileName);
     if (f.exists()) {
-      try {
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
+      try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
         return readPlatformNameFromLsb(name, version, arch, br);
       } catch (IOException e) {
         return null;
@@ -335,14 +389,40 @@ public class OS {
 
     String line;
     while ((line = br.readLine()) != null) {
-      if (line.startsWith("DISTRIB_DESCRIPTION"))
-        distribDescription = line.replace("DISTRIB_DESCRIPTION=", "").replace("\"", "");
-      if (line.startsWith("DISTRIB_CODENAME")) distribCodename = line.replace("DISTRIB_CODENAME=", "");
+      String parsedDescription = parseKeyValue(line, "DISTRIB_DESCRIPTION");
+      if (parsedDescription != null) {
+        distribDescription = parsedDescription;
+      }
+      String parsedCodename = parseKeyValue(line, "DISTRIB_CODENAME");
+      if (parsedCodename != null) {
+        distribCodename = parsedCodename;
+      }
     }
     if (distribDescription != null && distribCodename != null) {
       return new OsInfo(name, version, arch, distribDescription + " (" + distribCodename + ")");
     }
     return null;
+  }
+
+  private String parseKeyValue(final String line, final String key) {
+    String trimmedLine = line.trim();
+    String keyPrefix = key + "=";
+    if (!trimmedLine.startsWith(keyPrefix)) {
+      return null;
+    }
+    return stripOptionalQuotes(trimmedLine.substring(keyPrefix.length()).trim());
+  }
+
+  private String stripOptionalQuotes(final String value) {
+    if (value.length() < 2) {
+      return value;
+    }
+    char firstChar = value.charAt(0);
+    char lastChar = value.charAt(value.length() - 1);
+    if ((firstChar == '"' && lastChar == '"') || (firstChar == '\'' && lastChar == '\'')) {
+      return value.substring(1, value.length() - 1);
+    }
+    return value;
   }
 
   public String getShellExtension() {
@@ -367,17 +447,17 @@ public class OS {
     return osInfo.isUnix();
   }
 
-  public Boolean isPosix() {
+  public boolean isPosix() {
     return osInfo.isMac() || osInfo.isUnix();
   }
 
   static class OsInfo {
-    private String name;
-    private String arch;
-    private String version;
-    private String platformName;
+    private final String name;
+    private final String arch;
+    private final String version;
+    private final String platformName;
 
-    private OsInfo(final String name, final String version, final String arch, final String platformName) {
+    OsInfo(final String name, final String version, final String arch, final String platformName) {
       this.name = name;
       this.arch = arch;
       this.version = version;
@@ -401,15 +481,15 @@ public class OS {
     }
 
     public boolean isWindows() {
-      return (name != null) && name.contains("Win");
+      return (name != null) && name.startsWith("Windows");
     }
 
     public boolean isMac() {
-      return (name != null) && name.contains("Mac");
+      return (name != null) && (name.startsWith("Mac") || name.startsWith("Darwin"));
     }
 
     public boolean isUnix() {
-      return (name != null) && (name.contains("nix") || name.contains("nux") || name.contains("AIX") || name.contains("FreeBSD"));
+      return (name != null) && (name.contains("nix") || name.contains("nux") || name.startsWith("AIX") || name.startsWith("FreeBSD") || name.startsWith("SunOS"));
     }
   }
 
