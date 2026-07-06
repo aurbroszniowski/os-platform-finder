@@ -128,6 +128,24 @@ public class OSTest {
   }
 
   @Test
+  public void testOsReleaseWithVersionIdFallback() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+    String name = "some name";
+    String version = "4.1.4";
+    String arch = "68000";
+    OsInfo osInfo = invokeReadPlatformNameFromOsRelease(name, version, arch, reader("NAME=\"Alpine Linux\"", "ID=alpine", "VERSION_ID=3.13.5"));
+    Assert.assertThat(osInfo.getPlatformName(), is(equalTo("Alpine Linux 3.13.5 (alpine)")));
+  }
+
+  @Test
+  public void testOsReleaseWithVersionIdAndCodenameFallback() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
+    String name = "some name";
+    String version = "4.1.4";
+    String arch = "68000";
+    OsInfo osInfo = invokeReadPlatformNameFromOsRelease(name, version, arch, reader("NAME=\"Debian GNU/Linux\"", "ID=debian", "VERSION_ID=\"10\"", "VERSION_CODENAME=buster"));
+    Assert.assertThat(osInfo.getPlatformName(), is(equalTo("Debian GNU/Linux 10 (buster) (debian)")));
+  }
+
+  @Test
   public void testMacOsRecentVersions() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     assertMacOsPlatformName("14.7.6", "OS X Sonoma (14.7.6)");
     assertMacOsPlatformName("15.5", "OS X Sequoia (15.5)");

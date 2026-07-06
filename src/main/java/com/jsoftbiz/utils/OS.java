@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2023 Aurélien Broszniowski
+ * Copyright 2014-2026 Aurélien Broszniowski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -340,7 +340,9 @@ public class OS {
 
   private OsInfo readPlatformNameFromOsRelease(final String name, final String version, final String arch, final BufferedReader br) throws IOException {
     String distribName = "Linux";
-    String distribVersion = "";
+    String distribVersion = null;
+    String distribVersionId = null;
+    String distribVersionCodename = null;
     String distribId = null;
     boolean hasPlatformData = false;
 
@@ -353,7 +355,17 @@ public class OS {
       }
       String parsedVersion = parseKeyValue(line, "VERSION");
       if (parsedVersion != null) {
-        distribVersion = parsedVersion + " ";
+        distribVersion = parsedVersion;
+        hasPlatformData = true;
+      }
+      String parsedVersionId = parseKeyValue(line, "VERSION_ID");
+      if (parsedVersionId != null) {
+        distribVersionId = parsedVersionId;
+        hasPlatformData = true;
+      }
+      String parsedVersionCodename = parseKeyValue(line, "VERSION_CODENAME");
+      if (parsedVersionCodename != null && parsedVersionCodename.length() > 0) {
+        distribVersionCodename = parsedVersionCodename;
         hasPlatformData = true;
       }
       String parsedId = parseKeyValue(line, "ID");
@@ -361,13 +373,26 @@ public class OS {
         distribId = parsedId;
       }
     }
+    String platformName = buildOsReleasePlatformName(distribName, distribVersion, distribVersionId, distribVersionCodename);
     if (distribId != null) {
-      return new OsInfo(name, version, arch, distribName + " " + distribVersion + "(" + distribId + ")");
+      return new OsInfo(name, version, arch, platformName + " (" + distribId + ")");
     }
     if (hasPlatformData) {
-      return new OsInfo(name, version, arch, (distribName + " " + distribVersion).trim());
+      return new OsInfo(name, version, arch, platformName);
     }
     return null;
+  }
+
+  private String buildOsReleasePlatformName(final String distribName, final String distribVersion, final String distribVersionId, final String distribVersionCodename) {
+    StringBuilder platformName = new StringBuilder(distribName);
+    String version = distribVersion != null ? distribVersion : distribVersionId;
+    if (version != null && version.length() > 0) {
+      platformName.append(" ").append(version);
+    }
+    if (distribVersion == null && distribVersionCodename != null) {
+      platformName.append(" (").append(distribVersionCodename).append(")");
+    }
+    return platformName.toString();
   }
 
   private OsInfo getPlatformNameFromLsbRelease(final String name, final String version, final String arch) {
